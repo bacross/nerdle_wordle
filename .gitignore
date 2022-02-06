@@ -1,0 +1,4 @@
+*.pkl
+*.pickle
+*__pycache__*
+*/data/*
