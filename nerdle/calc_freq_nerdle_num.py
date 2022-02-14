@@ -1,26 +1,14 @@
 import nerdle_cfg
+import nerdle_input
 import d6tflow
 import build_nerdles
-import collections
-from functools import reduce
+from functools import map, reduce
 import pandas as pd
+import numpy as np
 
-@d6tflow.requires(build_nerdles.convertNerdles)
-class calcNumberFreqInNerdles(d6tflow.tasks.TaskPqPandas):
+@d6tflow.requires(build_nerdles.buildNerdles)
+class constructFilterBasedOnGuesses(d6tflow.tasks.TaskPickle):
 
     def run(self):
-        nerdle_list = self.input().load()
-
-        big_nerd_list = ''.join(nerdle_list)
-
-        big_string_nerd_list = [list(n) for n in big_nerd_list]
-
-        freq_dict = collections.Counter(big_string_nerd_list)
-
-        nerd_sum = dict((n,[sum(dict(k,freq_dict[k]).values()) for k in n]) for n in nerdle_list)
-
-        nerd_sum_df = pd.DataFrame.from_dict(nerd_sum,orient='index')
-
-        nerd_sum_df = nerd_sum_df.reset_index()
-
-        self.save(nerd_sum_df)
+        nerdle_dict = nerdle_input.nerdle_dict
+        
